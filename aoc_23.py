@@ -50,11 +50,12 @@ def day1_2(input):
     print("  Answer: " + str(day1_2_result))
 
 
-def day2_1(input):
+def day2(input):
     red_cubes = 12
     green_cubes = 13
     blue_cubes = 14
     poss_games = []
+    power_games = []
 
     # open file
     with open(input) as file:
@@ -81,20 +82,25 @@ def day2_1(input):
             and game_col_dict["blue"] <= blue_cubes
         ):
             poss_games.append(int(spl_line[1]))
-
-    #     print(spl_line[1], game_col_dict)
-    # print(poss_games)
+        # calculate power games
+        power_games.append(
+            game_col_dict["red"] * game_col_dict["green"] * game_col_dict["blue"]
+        )
 
     day2_1_result = sum(poss_games)
     print("\n  Day 2 - Task 1")
     print("  Answer: " + str(day2_1_result))
+
+    day2_2_result = sum(power_games)
+    print("\n  Day 2 - Task 2")
+    print("  Answer: " + str(day2_2_result))
 
 
 def main():
     print("\n~~~ Advent Of Code 2023 ~~~\n")
     day1_1("/Users/tim.powell/Documents/vcs/aoc_23/inputs/day1.txt")
     day1_2("/Users/tim.powell/Documents/vcs/aoc_23/inputs/day1.txt")
-    day2_1("/Users/tim.powell/Documents/vcs/aoc_23/inputs/day2_1.txt")
+    day2("/Users/tim.powell/Documents/vcs/aoc_23/inputs/day2.txt")
 
 
 main()
