@@ -96,11 +96,76 @@ def day2(input):
     print("  Answer: " + str(day2_2_result))
 
 
+def day3_1(input):
+    parts_list = []
+
+    with open(input) as file:
+        lines = [line.strip() for line in file]
+
+    for i in range(len(lines)):
+        line = lines[i]
+        # print("\nLine number " + str(i) + ": " + line)
+        count = 0
+        x = 0
+        for j in range(len(line)):
+            if line[j].isdigit():
+                count += 1
+            else:
+                spec_char = []
+                if line[j - count : j] != "":
+                    # deal with low edge case
+                    if j - count - 1 < 0:
+                        low_j_calc = 0
+                    else:
+                        low_j_calc = j - count - 1
+                    # deal with high edge case
+                    if j + 1 > len(line):
+                        high_j_calc = len(line)
+                    else:
+                        high_j_calc = j + 1
+
+                    if i > 0:
+                        # line above spec chars
+                        spec_char.append(lines[i - 1][low_j_calc:high_j_calc])
+                    if low_j_calc > 0:
+                        # before num spec chars
+                        spec_char.append(lines[i][low_j_calc])
+                    if high_j_calc < len(line):
+                        # after num spec chars
+                        spec_char.append(lines[i][j])
+                    if i + 1 < len(lines):
+                        # line below spec chars
+                        spec_char.append(lines[i + 1][low_j_calc:high_j_calc])
+
+                    # remove numbers and . from spec_char
+                    spec_char_concat = ("".join(spec_char)).translate(
+                        {ord(i): None for i in "1234567890."}
+                    )
+                    if len(spec_char_concat) > 0:
+                        parts_list.append(int(line[j - count : j]))
+
+                    # print(
+                    #     "Part: " + line[j - count : j] + " has spec_chars:",
+                    #     spec_char,
+                    #     "OR",
+                    #     spec_char_concat,
+                    # )
+
+                count = 0
+            x += 1
+        # print("Parts:", parts_list)
+
+    day3_1_result = sum(parts_list)
+    print("\n  Day 2 - Task 2")
+    print("  Answer: " + str(day3_1_result))
+
+
 def main():
     print("\n~~~ Advent Of Code 2023 ~~~\n")
-    day1_1("/Users/tim.powell/Documents/vcs/aoc_23/inputs/day1.txt")
-    day1_2("/Users/tim.powell/Documents/vcs/aoc_23/inputs/day1.txt")
-    day2("/Users/tim.powell/Documents/vcs/aoc_23/inputs/day2.txt")
+    # day1_1("inputs/day1.txt")
+    # day1_2("inputs/day1.txt")
+    # day2("inputs/day2.txt")
+    day3_1("inputs/day3.txt")
 
 
 main()
