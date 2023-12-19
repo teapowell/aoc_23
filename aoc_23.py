@@ -1,4 +1,5 @@
 import re
+import numpy as np
 
 
 def day1_1(input):
@@ -98,66 +99,118 @@ def day2(input):
 
 def day3_1(input):
     parts_list = []
+    star_part_dict = {}
+    star_parts_list = []
 
     with open(input) as file:
         lines = [line.strip() for line in file]
+
+    # deal with numbers ending line not getting recognised
+    lines = [x + "." for x in lines]
 
     for i in range(len(lines)):
         line = lines[i]
         # print("\nLine number " + str(i) + ": " + line)
         count = 0
-        x = 0
         for j in range(len(line)):
             if line[j].isdigit():
                 count += 1
+                # print("j =", j)
+                # print("count = ", count)
             else:
                 spec_char = []
                 if line[j - count : j] != "":
-                    # deal with low edge case
-                    if j - count - 1 < 0:
-                        low_j_calc = 0
+                    # line above spec chars
+                    above_chars = ""
+                    if i - 1 >= 0:
+                        if j - count - 1 >= 0:
+                            # diagonal up left
+                            above_chars = above_chars + lines[i - 1][j - count - 1]
+                        else:
+                            above_chars = above_chars + "."
+                        # directly above
+                        above_chars = above_chars + lines[i - 1][j - count : j]
+                        if j <= len(line):
+                            # diagonal up right
+                            above_chars = above_chars + lines[i - 1][j]
+                        else:
+                            above_chars = above_chars + "."
                     else:
-                        low_j_calc = j - count - 1
-                    # deal with high edge case
-                    if j + 1 > len(line):
-                        high_j_calc = len(line)
-                    else:
-                        high_j_calc = j + 1
+                        above_chars = "." * (count + 2)
 
-                    if i > 0:
-                        # line above spec chars
-                        spec_char.append(lines[i - 1][low_j_calc:high_j_calc])
-                    if low_j_calc > 0:
-                        # before num spec chars
-                        spec_char.append(lines[i][low_j_calc])
-                    if high_j_calc < len(line):
-                        # after num spec chars
-                        spec_char.append(lines[i][j])
+                    spec_char.append(above_chars)
+
+                    # same line spec chars
+                    line_chars = ""
+                    if j - count - 1 >= 0:
+                        # before
+                        line_chars = line_chars + line[j - count - 1]
+                    else:
+                        line_chars = line_chars + "."
+                    line_chars = line_chars + ("." * count)
+                    if j <= len(line):
+                        # after
+                        line_chars = line_chars + line[j]
+                    else:
+                        line_chars = line_chars + "."
+
+                    spec_char.append(line_chars)
+
+                    # line below spec chars
+                    below_chars = ""
                     if i + 1 < len(lines):
-                        # line below spec chars
-                        spec_char.append(lines[i + 1][low_j_calc:high_j_calc])
+                        if j - count - 1 >= 0:
+                            # diagonal down left
+                            below_chars = below_chars + lines[i + 1][j - count - 1]
+                        else:
+                            below_chars = below_chars + "."
+                        # directly below
+                        below_chars = below_chars + lines[i + 1][j - count : j]
+                        if j <= len(line):
+                            # diagonal down right
+                            below_chars = below_chars + lines[i + 1][j]
+                        else:
+                            below_chars = below_chars + "."
+                    else:
+                        below_chars = "." * (count + 2)
 
-                    # remove numbers and . from spec_char
-                    spec_char_concat = ("".join(spec_char)).translate(
-                        {ord(i): None for i in "1234567890."}
-                    )
+                    spec_char.append(below_chars)
+
+                    ### PART 1
+                    # remove . from spec_char
+                    spec_char_concat = " ".join(spec_char).replace(".", "").split()
                     if len(spec_char_concat) > 0:
                         parts_list.append(int(line[j - count : j]))
 
-                    # print(
-                    #     "Part: " + line[j - count : j] + " has spec_chars:",
-                    #     spec_char,
-                    #     "OR",
-                    #     spec_char_concat,
-                    # )
+                    ### PART 2
+                    star_char = []
+
+                    star_char = np.argwhere(
+                        np.array([list(x) for x in spec_char]) == "*"
+                    )
+
+                    if len(star_char) > 0:
+                        for x in star_char:
+                            x[0] = x[0] + (i - 1)
+                            x[1] = x[1] + (j - count - 1)
+                            if str(x) in star_part_dict:
+                                star_part_dict[str(x)].append(int(line[j - count : j]))
+                            else:
+                                star_part_dict[str(x)] = [int(line[j - count : j])]
 
                 count = 0
-            x += 1
-        # print("Parts:", parts_list)
+
+    for key in star_part_dict:
+        if len(star_part_dict[key]) == 2:
+            star_parts_list.append(star_part_dict[key][0] * star_part_dict[key][1])
 
     day3_1_result = sum(parts_list)
-    print("\n  Day 2 - Task 2")
+    print("\n  Day 3 - Task 1")
     print("  Answer: " + str(day3_1_result))
+
+    day3_2_result = sum(star_parts_list)
+    print("\n  Day 3 - Task 2")
+    print("  Answer: " + str(day3_2_result))
 
 
 def main():
