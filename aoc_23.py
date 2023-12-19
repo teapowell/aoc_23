@@ -97,7 +97,7 @@ def day2(input):
     print("  Answer: " + str(day2_2_result))
 
 
-def day3_1(input):
+def day3(input):
     parts_list = []
     star_part_dict = {}
     star_parts_list = []
@@ -218,7 +218,7 @@ def main():
     # day1_1("inputs/day1.txt")
     # day1_2("inputs/day1.txt")
     # day2("inputs/day2.txt")
-    day3_1("inputs/day3.txt")
+    day3("inputs/day3.txt")
 
 
 main()
