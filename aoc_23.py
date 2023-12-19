@@ -214,7 +214,7 @@ def day3(input):
 
 
 def main():
-    print("\n~~~ Advent Of Code 2023 ~~~\n")
+    print("\n~~~ Advent Of Code 2023 ~~~")
     # day1_1("inputs/day1.txt")
     # day1_2("inputs/day1.txt")
     # day2("inputs/day2.txt")
