@@ -213,12 +213,66 @@ def day3(input):
     print("  Answer: " + str(day3_2_result))
 
 
+def day4(input):
+    points = []
+    num_of_cards = 0
+    card_ns = []
+
+    with open(input) as file:
+        cards = [line.strip() for line in file]
+
+    cards = [card.split()[2:] for card in cards]
+
+    for card in cards:
+        winning_nums = card[: card.index("|")]
+        nums_have = card[card.index("|") + 1 :]
+        match_nums = sum(nums in nums_have for nums in winning_nums)
+        # print("match_nums:", match_nums)
+
+        # Part 1
+        if match_nums > 0:
+            points.append(2 ** (match_nums - 1))
+        else:
+            points.append(0)
+
+        # Part 2
+        num_of_cards = num_of_cards + match_nums + 1
+        curr_card = cards.index(card) + 1
+        card_ns.append(curr_card)
+        num_instances = card_ns.count(curr_card)
+        # print("current card game line:", curr_card)
+        # print("number of instances of", curr_card, ":", num_instances)
+        for i in range(match_nums):
+            # print(
+            #     "Adding card to deck:",
+            #     curr_card + i + 1,
+            #     "x",
+            #     num_instances,
+            #     "number of times",
+            # )
+            for j in range(num_instances):
+                card_ns.append(cards.index(card) + i + 2)
+        # print(card_ns)
+        # print()
+
+    day4_1_result = sum(points)
+    print("\n  Day 4 - Task 1")
+    print("  Answer: " + str(day4_1_result))
+
+    day4_2_result = len(card_ns)
+    print("\n  Day 4 - Task 2")
+    print("  Answer: " + str(day4_2_result))
+
+    # Part 2
+
+
 def main():
     print("\n~~~ Advent Of Code 2023 ~~~")
     # day1_1("inputs/day1.txt")
     # day1_2("inputs/day1.txt")
     # day2("inputs/day2.txt")
-    day3("inputs/day3.txt")
+    # day3("inputs/day3.txt")
+    day4("inputs/day4.txt")
 
 
 main()
