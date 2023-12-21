@@ -263,16 +263,43 @@ def day4(input):
     print("\n  Day 4 - Task 2")
     print("  Answer: " + str(day4_2_result))
 
-    # Part 2
+
+def day5(input):
+    with open(input) as file:
+        mappings = [line.strip() for line in file]
+
+    seeds = mappings[0].split()[1:]
+    mappings = [i for i in mappings[2:] if i != ""]
+    mappings.append("end of map")
+    map_titles = [s for s in mappings if "map" in s]
+
+    for t in range(len(map_titles) - 1):
+        index = mappings.index(map_titles[t])
+        end_of_section = mappings.index(map_titles[t + 1])
+        if end_of_section > len(mappings):
+            end_of_section = len(mappings)
+
+        # CREATE DF FOR MAPPINGS
+        print(mappings[index].split()[0].split("-"))
+        print(mappings[index + 1 : end_of_section])
+
+    day5_1_result = "NONE"
+    print("\n  Day 5 - Task 1")
+    print("  Answer: " + str(day5_1_result))
+
+    day5_2_result = "NONE"
+    print("\n  Day 5 - Task 2")
+    print("  Answer: " + str(day5_2_result))
 
 
 def main():
-    print("\n~~~ Advent Of Code 2023 ~~~")
+    print("\n~~~ Advent Of Code 2023 ~~~\n")
     # day1_1("inputs/day1.txt")
     # day1_2("inputs/day1.txt")
     # day2("inputs/day2.txt")
     # day3("inputs/day3.txt")
-    day4("inputs/day4.txt")
+    # day4("inputs/day4.txt")
+    day5("inputs/day5_test.txt")
 
 
 main()
