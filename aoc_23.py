@@ -394,6 +394,49 @@ def day5_2(input, task2):
     print("  Answer: " + str(day5_result))
 
 
+def day6(input):
+    with open(input) as file:
+        lines = [line.strip() for line in file]
+
+    time = (lines[0].split())[1:]
+    distance = (lines[1].split())[1:]
+    time2 = int("".join(time))
+    distance2 = int("".join(distance))
+
+    # PART 1
+    chances_to_win_1 = []
+
+    for t in range(len(time)):
+        winning_race = []
+        race_t = int(time[t])
+        distance_to_beat = int(distance[t])
+        for ms in range(race_t + 1):
+            speed = ms
+            time_left = race_t - ms
+            race_distance = speed * time_left  # distance gone = speed * time left
+            if race_distance > distance_to_beat:
+                winning_race.append(race_distance)
+        # print(winning_race)
+        chances_to_win_1.append(len(winning_race))
+
+    day6_1_result = np.prod(np.array(chances_to_win_1))
+    print("\n  Day 1 - Task 1")
+    print("  Answer: " + str(day6_1_result))
+
+    # PART 2
+    chances_to_win_2 = 0
+    for ms in range(time2 + 1):
+        speed = ms
+        time_left = time2 - ms
+        race_distance = speed * time_left  # distance gone = speed * time left
+        if race_distance > distance2:
+            chances_to_win_2 += 1
+
+    day6_2_result = chances_to_win_2
+    print("\n  Day 1 - Task 2")
+    print("  Answer: " + str(day6_2_result))
+
+
 def main():
     print("\n~~~ Advent Of Code 2023 ~~~\n")
     # day1_1("inputs/day1.txt")
@@ -402,7 +445,8 @@ def main():
     # day3("inputs/day3.txt")
     # day4("inputs/day4.txt")
     # day5_1("inputs/day5.txt")
-    day5_2("inputs/day5.txt", False)
+    # day5_2("inputs/day5.txt", False)
+    day6("inputs/day6.txt")
 
 
 main()
