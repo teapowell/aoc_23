@@ -264,32 +264,134 @@ def day4(input):
     print("  Answer: " + str(day4_2_result))
 
 
-def day5(input):
+def day5_1(input):
+    locations = []
+
     with open(input) as file:
         mappings = [line.strip() for line in file]
+    # print("    File opened.")
 
     seeds = mappings[0].split()[1:]
     mappings = [i for i in mappings[2:] if i != ""]
     mappings.append("end of map")
     map_titles = [s for s in mappings if "map" in s]
 
-    for t in range(len(map_titles) - 1):
-        index = mappings.index(map_titles[t])
-        end_of_section = mappings.index(map_titles[t + 1])
-        if end_of_section > len(mappings):
-            end_of_section = len(mappings)
+    # print("    Sorting data...")
 
-        # CREATE DF FOR MAPPINGS
-        print(mappings[index].split()[0].split("-"))
-        print(mappings[index + 1 : end_of_section])
+    for seed in seeds:
+        # print("      Seed:", seed)
+        seed = int(seed)
+        value = seed
 
-    day5_1_result = "NONE"
+        for t in range(len(map_titles) - 1):
+            index = mappings.index(map_titles[t])
+            end_of_section = mappings.index(map_titles[t + 1])
+            if end_of_section > len(mappings):
+                end_of_section = len(mappings)
+
+            map_name = mappings[index].split()[0].split("-")
+            del map_name[1]
+            map_name_data = [
+                item.split() for item in mappings[index + 1 : end_of_section]
+            ]
+            # print("        Mapping:", str(map_name))
+
+            # print(str(map_name), map_name_data)
+            temp_value = value
+            for data in map_name_data:
+                source_start = int(data[1])
+                destination_start = int(data[0])
+                range_length = int(data[2])
+                source_end = source_start + range_length
+                # print(source_end, "=", source_start, "+", range_length)
+                if temp_value >= source_start and temp_value < source_end:
+                    # print(temp_value, "<", source_end)
+                    value = destination_start + (value - source_start)
+                    # print(data)
+            # print(map_name[0], temp_value, map_name[1], value)
+
+            if map_name[1] == "location":
+                locations.append(value)
+
+        # print(locations, "\n")
+
+    day5_result = min(locations)
     print("\n  Day 5 - Task 1")
-    print("  Answer: " + str(day5_1_result))
+    print("  Answer: " + str(day5_result))
 
-    day5_2_result = "NONE"
+
+def day5_2(input, task2):
+    if task2 == True:
+        locations = [9999999999999]
+
+        with open(input) as file:
+            mappings = [line.strip() for line in file]
+        # print("    File opened.")
+
+        seeds = mappings[0].split()[1:]
+        mappings = [i for i in mappings[2:] if i != ""]
+        mappings.append("end of map")
+        map_titles = [s for s in mappings if "map" in s]
+
+        # print("    Sorting data...")
+        # print(seeds)
+        # print(seeds[::2])
+        # print(seeds[1::2])
+        seeds_start = seeds[::2]
+        seeds_range = seeds[1::2]
+        for i in range(len(seeds_start)):
+            seeds2 = []
+            print("Seed range:", seeds_start[i], seeds_range[i])
+            for j in range(int(seeds_range[i])):
+                # print(seeds_start[i], int(seeds_start[i]) + j)
+                seeds2.append(int(seeds_start[i]) + j)
+
+            for seed in seeds2:
+                # print("      Seed:", seed)
+                seed = int(seed)
+                value = seed
+
+                for t in range(len(map_titles) - 1):
+                    index = mappings.index(map_titles[t])
+                    end_of_section = mappings.index(map_titles[t + 1])
+                    if end_of_section > len(mappings):
+                        end_of_section = len(mappings)
+
+                    map_name = mappings[index].split()[0].split("-")
+                    del map_name[1]
+                    map_name_data = [
+                        item.split() for item in mappings[index + 1 : end_of_section]
+                    ]
+                    # print("        Mapping:", str(map_name))
+
+                    # print(str(map_name), map_name_data)
+                    temp_value = value
+                    for data in map_name_data:
+                        source_start = int(data[1])
+                        destination_start = int(data[0])
+                        range_length = int(data[2])
+                        source_end = source_start + range_length
+                        # print(source_end, "=", source_start, "+", range_length)
+                        if temp_value >= source_start and temp_value < source_end:
+                            # print(temp_value, "<", source_end)
+                            value = destination_start + (value - source_start)
+                            # print(data)
+                    # print(map_name[0], temp_value, map_name[1], value)
+
+                    if map_name[1] == "location":
+                        if value < min(locations):
+                            locations.append(value)
+                            print("Location", value)
+
+            # print(locations, "\n")
+
+        day5_result = min(locations)
+    else:
+        day5_result = 15880236
     print("\n  Day 5 - Task 2")
-    print("  Answer: " + str(day5_2_result))
+    # Seed range: 3151642679 224376393
+    # Location 15880236
+    print("  Answer: " + str(day5_result))
 
 
 def main():
@@ -299,7 +401,8 @@ def main():
     # day2("inputs/day2.txt")
     # day3("inputs/day3.txt")
     # day4("inputs/day4.txt")
-    day5("inputs/day5_test.txt")
+    # day5_1("inputs/day5.txt")
+    day5_2("inputs/day5.txt", False)
 
 
 main()
